@@ -1,0 +1,25 @@
+// colors
+$white: #fff;
+$gray: #c0c0c0;
+$darkgray: #808080;
+
+// global
+.bevel {
+  border-width: 2px;
+  border-style: solid;
+
+  &-up {
+    border-top-color: $white;
+    border-left-color: $white;
+    border-right-color: $darkgray;
+    border-bottom-color: $darkgray;
+  }
+
+  &-down {
+    border-bottom-color: $white;
+    border-right-color: $white;
+    border-left-color: $darkgray;
+    border-top-color: $darkgray;
+  }
+}
+

@@ -1,0 +1,14 @@
+.nav {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+
+    li {
+      padding: 0 8px;
+    }
+  }
+}
