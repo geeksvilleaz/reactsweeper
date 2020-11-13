@@ -17,3 +17,12 @@ The classic minesweeper game you know and love, but done with the following tech
 5. Created a few pages: Home and About
 6. Created some global styles
 7. Began styling the game board.
+
+## Day 2
+
+1. Continued to style our game board.
+2. Added logic for our number display components.
+3. Added right click interactions for the cell components.
+4. Created global typescript definition file.
+5. Set up the redux integration.
+6. Created our game actions & reducers files.
