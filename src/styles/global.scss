@@ -3,12 +3,12 @@ $white: #fff;
 $gray: #c0c0c0;
 $darkgray: #808080;
 
+$bevel: 4px solid $darkgray;
+
 // global
 .bevel {
-  border-width: 2px;
-  border-style: solid;
-
   &-up {
+    border: $bevel;
     border-top-color: $white;
     border-left-color: $white;
     border-right-color: $darkgray;
@@ -16,6 +16,7 @@ $darkgray: #808080;
   }
 
   &-down {
+    border: $bevel;
     border-bottom-color: $white;
     border-right-color: $white;
     border-left-color: $darkgray;
