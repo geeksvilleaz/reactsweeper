@@ -3,6 +3,11 @@ type InitGame = {
   width: number;
   height: number;
   numMines: number;
+  cells: RS.Cell[];
 }
 
-export type Action = InitGame;
+type GameOver = {
+  type: 'game.over';
+}
+
+export type Action = InitGame | GameOver;

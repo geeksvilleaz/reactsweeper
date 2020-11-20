@@ -8,9 +8,12 @@ declare module RS {
   }
 
   interface Cell {
+    id: number;
     state: string;
     isMine: boolean;
   }
 
-  interface Store {}
+  interface Store {
+    game: Game;
+  }
 }

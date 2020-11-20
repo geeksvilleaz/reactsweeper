@@ -11,6 +11,12 @@ const initialState: RS.Game = {
 function game(state = initialState, action: Action) {
   switch (action.type) {
     case 'init.game':
+      return {
+        ...state,
+        ...action
+      };
+
+    case 'game.over':
       return state;
 
     default:

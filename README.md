@@ -26,3 +26,11 @@ The classic minesweeper game you know and love, but done with the following tech
 4. Created global typescript definition file.
 5. Set up the redux integration.
 6. Created our game actions & reducers files.
+
+## Day 3
+
+1. Reviewed redux integration
+2. Created `useGame` custom hook
+3. Created our game initialization script
+4. Randomized mine locations
+5. Started calculating caution level for each cell

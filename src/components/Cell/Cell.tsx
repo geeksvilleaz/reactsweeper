@@ -3,6 +3,7 @@ import './Cell.scss';
 
 interface IProps {
   id: number;
+  cell: RS.Cell;
 }
 
 const CELL_STATES = {
@@ -20,7 +21,7 @@ const CELL_STATES = {
   }
 };
 
-const Cell: React.FC<IProps> = ({ id }) => {
+const Cell: React.FC<IProps> = ({ id, cell }) => {
   const [cellState, setCellState] = useState(CELL_STATES.EMPTY);
 
   const handleRightClick = (event: React.SyntheticEvent) => {
@@ -44,7 +45,11 @@ const Cell: React.FC<IProps> = ({ id }) => {
   const handleClick = () => {};
 
   const style = {
-    backgroundPositionX: cellState.x
+    backgroundPositionX: cell.isMine 
+      ? -64 : cellState.x,
+    backgroundPositionY: cell.isMine
+      ? -39 : -23,
+    color: cell.isMine ? 'red' : 'black'
   }
 
   return (
@@ -52,9 +57,7 @@ const Cell: React.FC<IProps> = ({ id }) => {
       className="cell" 
       onContextMenu={handleRightClick}
       style={style}
-    >
-      {id}
-    </div>
+    />
   );
 };
 
