@@ -34,3 +34,10 @@ The classic minesweeper game you know and love, but done with the following tech
 3. Created our game initialization script
 4. Randomized mine locations
 5. Started calculating caution level for each cell
+
+## Day 4
+
+1. Reviewed `useGame` custom hook
+2. Finished calculating caution level and fixed logic issues
+3. Created a click handler inside of `useGame` hook
+4. Moved cell state logic to the redux store.

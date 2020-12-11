@@ -5,7 +5,8 @@ const initialState: RS.Game = {
   height: 0,
   numMines: 0,
   timer: 0,
-  width: 0
+  width: 0,
+  isGameOver: false
 };
 
 function game(state = initialState, action: Action) {
@@ -13,11 +14,30 @@ function game(state = initialState, action: Action) {
     case 'init.game':
       return {
         ...state,
-        ...action
+        ...action,
+        isGameOver: false
       };
 
     case 'game.over':
-      return state;
+      return {
+        ...state,
+        isGameOver: true
+      };
+
+    case 'check.cell':
+      return {
+        ...state,
+        cells: state.cells.map((cell: RS.Cell) => {
+          if (cell.id === action.cellId) {
+            return {
+              ...cell,
+              state: action.state
+            };
+          }
+
+          return cell;
+        })
+      };
 
     default:
       return state;

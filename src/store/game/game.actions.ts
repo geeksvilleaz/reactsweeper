@@ -10,4 +10,12 @@ type GameOver = {
   type: 'game.over';
 }
 
-export type Action = InitGame | GameOver;
+type CheckCell = {
+  type: 'check.cell';
+  cellId: number;
+  state: string;
+}
+
+export type Action = InitGame 
+  | GameOver 
+  | CheckCell;
