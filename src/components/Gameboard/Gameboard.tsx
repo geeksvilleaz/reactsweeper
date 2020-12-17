@@ -10,7 +10,10 @@ const Gameboard: React.FC = () => {
     return state.game;
   });
 
-  const { initGameCB } = useGame();
+  const { initGameCB, getNumMinesRemainingCB } = useGame();
+
+  const numMinesRemaining = getNumMinesRemainingCB(game.cells, game.numMines);
+
   useEffect(() => {
     const difficultyLevel = 'beginner';
     initGameCB(difficultyLevel);
@@ -18,9 +21,9 @@ const Gameboard: React.FC = () => {
 
   return (
     <div className="gameboard bevel-up">
-      <GameHead />
+      <GameHead numMinesRemaining={numMinesRemaining} />
 
-      <GameBody cells={game.cells} width={game.width} height={game.height} />
+      <GameBody width={game.width} height={game.height} />
     </div>
   )
 };

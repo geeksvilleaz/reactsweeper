@@ -3,6 +3,7 @@ declare module RS {
     width: number;
     height: number;
     numMines: number;
+    numMinesRemaining: number;
     timer: number;
     cells: Cell[];
     isGameOver: boolean;

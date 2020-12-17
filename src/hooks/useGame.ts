@@ -7,6 +7,7 @@ import cellConst from '../constants/cellConst';
 const useGame = () => {
   const dispatch = useDispatch();
   const game = useSelector((state: RS.Store) => state.game);
+  let cellsChecked: any = {};
 
   const initGameCB = useCallback((difficultyLevel: string) => {
     console.log('init game cb');
@@ -79,6 +80,7 @@ const useGame = () => {
       type: 'init.game',
       height: level.height,
       numMines: level.numMines,
+      numMinesRemaining: level.numMines,
       width: level.width,
       cells
     };
@@ -89,6 +91,8 @@ const useGame = () => {
   const gameOverCB = useCallback(() => {}, []);
 
   const checkCellCB = useCallback((cell: RS.Cell) => {
+    cellsChecked[cell.id] = true;
+
     console.log({ cell });
     // is mine
     if (cell.isMine) {
@@ -117,14 +121,113 @@ const useGame = () => {
 
     // if count is 0
     if (cell.count === 0) {
-      // expansion
+      checkCell(cell);
     }
-  }, [dispatch, game]);
+
+    cellsChecked = {};
+
+    function checkCell(cell: RS.Cell) {
+      console.log('checking cell id', cell.id);
+      const isTop = cell.id < game.width;
+      const isRight = cell.id > 0 && cell.id + 1 % game.width === 0;
+      const isBottom = cell.id >= (game.width - 1) * game.height;
+      const isLeft = cell.id > 0 && cell.id % game.width === 0;
+  
+      const n = cell.id - game.width;
+      const ne = cell.id - game.width + 1;
+      const e = cell.id + 1;
+      const se = cell.id + game.width + 1;
+      const s = cell.id + game.width;
+      const sw = cell.id + game.width - 1;
+      const w = cell.id - 1;
+      const nw = cell.id - game.width - 1;
+  
+      const { cells } = game;
+      if (!isTop && cells[n].count === 0 && cellsChecked[n]) {
+        checkCellCB(cells[n]);
+      }
+
+      if (!isTop && !isRight && cells[ne].count === 0 && cellsChecked[ne]) {
+        checkCellCB(cells[ne]);
+      }
+
+      if (!isRight && cells[e].count === 0 && cellsChecked[e]) {
+        checkCellCB(cells[e]);
+      }
+
+      if (!isRight && !isBottom && cells[se].count === 0 && cellsChecked[se]) {
+        checkCellCB(cells[se]);
+      }
+
+      if (!isBottom && cells[s].count === 0 && cellsChecked[s]) {
+        checkCellCB(cells[s]);
+      }
+
+      if (!isBottom && !isLeft && cells[sw].count === 0 && cellsChecked[sw]) {
+        checkCellCB(cells[sw]);
+      }
+
+      if (!isLeft && cells[w].count === 0 && cellsChecked[w]) {
+        checkCellCB(cells[w]);
+      }
+
+      if (!isLeft && !isTop && cells[nw].count === 0 && cellsChecked[nw]) {
+        checkCellCB(cells[nw]);
+      }
+    }
+  }, [dispatch, game, cellsChecked]);
+
+  
+
+  const getNumMinesRemainingCB = useCallback((cells: RS.Cell[], numMines: number): number => {
+    const numFlags = cells.reduce((prev, curr) => {
+      return curr.state === cellConst.states.flagged
+        ? prev + 1
+        : prev;
+    }, 0);
+  
+    return numMines - numFlags;
+  }, []);
+
+
+  const setFlagStateCB = useCallback((cell: RS.Cell) => {
+    console.log({ cell })
+    let cellState = cell.state;
+
+    const numMinesRemaining = getNumMinesRemainingCB(game.cells, game.numMines);
+
+    switch (cell.state) {
+      case cellConst.states.untouched:
+        if (numMinesRemaining === 0) {
+          return;
+        }
+        cellState = cellConst.states.flagged;
+        break;
+
+      case cellConst.states.flagged:
+        cellState = cellConst.states.unknown;
+        break;
+
+      case cellConst.states.unknown:
+        cellState = cellConst.states.untouched;
+        break;
+    }
+
+    const toDispatch: Action = {
+      type: 'check.cell',
+      cellId: cell.id,
+      state: cellState
+    };
+
+    dispatch(toDispatch);
+  }, [dispatch, game, getNumMinesRemainingCB]);
 
   return {
     initGameCB,
     gameOverCB,
-    checkCellCB
+    checkCellCB,
+    setFlagStateCB,
+    getNumMinesRemainingCB
   };
 };
 

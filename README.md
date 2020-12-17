@@ -41,3 +41,5 @@ The classic minesweeper game you know and love, but done with the following tech
 2. Finished calculating caution level and fixed logic issues
 3. Created a click handler inside of `useGame` hook
 4. Moved cell state logic to the redux store.
+
+## Day 5

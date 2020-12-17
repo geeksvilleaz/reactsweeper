@@ -8,17 +8,17 @@ interface IProps {
   cell: RS.Cell;
 }
 
-interface CellStates {
-  [key: string]: CellState;
+interface flagStates {
+  [key: string]: flagState;
 }
 
-interface CellState {
+interface flagState {
   state: string;
   x: number;
   y: number;
 }
 
-const CELL_STATES: CellStates = {
+const CELL_STATES: flagStates = {
   UNTOUCHED: {
     state: 'untouched',
     x: 0,
@@ -29,7 +29,7 @@ const CELL_STATES: CellStates = {
     x: 0,
     y: -23
   },
-  FLAG: {
+  FLAGGED: {
     state: 'flag',
     x: -16,
     y: -39
@@ -47,25 +47,14 @@ const CELL_WIDTH = 16;
 const NUMBER_Y_POSITION = -23;
 
 const Cell: React.FC<IProps> = ({ id, cell }) => {
-  const { checkCellCB } = useGame();
+  console.log('rendering cell', id);
+  const { checkCellCB, setFlagStateCB } = useGame();
 
-  // const handleRightClick = (event: React.SyntheticEvent) => {
-  //   event.preventDefault();
+  const handleRightClick = (event: React.SyntheticEvent) => {
+    event.preventDefault();
 
-  //   switch (cellState.state) {
-  //     case CELL_STATES.UNTOUCHED.state:
-  //       setCellState(CELL_STATES.FLAG);
-  //       break;
-
-  //     case CELL_STATES.FLAG.state:
-  //       setCellState(CELL_STATES.UNKNOWN);
-  //       break;
-
-  //     case CELL_STATES.UNKNOWN.state:
-  //       setCellState(CELL_STATES.UNTOUCHED);
-  //       break;
-  //   }
-  // };
+    setFlagStateCB(cell);
+  };
 
   const handleClick = () => {
     checkCellCB(cell);
@@ -114,7 +103,7 @@ const Cell: React.FC<IProps> = ({ id, cell }) => {
   return (
     <div 
       className="cell" 
-      // onContextMenu={handleRightClick}
+      onContextMenu={handleRightClick}
       onClick={handleClick}
       style={style}
     >

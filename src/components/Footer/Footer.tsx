@@ -1,8 +1,6 @@
 import React from 'react';
 import './Footer.scss';
 
-interface IProps {}
-
 const Footer: React.FC = () => {
   return (
     <footer className="footer">

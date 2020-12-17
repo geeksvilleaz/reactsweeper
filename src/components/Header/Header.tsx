@@ -3,8 +3,6 @@ import Logo from '../Logo/Logo';
 import Nav from '../Nav/Nav';
 import './Header.scss';
 
-interface IProps {}
-
 const Header: React.FC = () => {
   return (
     <header className="header">

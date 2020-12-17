@@ -1,18 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Cell from '../Cell/Cell';
 import './GameBody.scss';
 
 interface IProps {
-  cells: RS.Cell[];
   width: number;
   height: number;
 }
 
 const CELL_WIDTH = 16;
 
-const GameBody: React.FC<IProps> = ({ cells, width, height }) => {
-  const numCells = width * height;
-  
+const GameBody: React.FC<IProps> = ({ width, height }) => {
+  const { cells } = useSelector((state: RS.Store) => state.game);
+
+  console.log('rendering game body');
   const style = {
     width: CELL_WIDTH * width
   };
@@ -26,4 +27,4 @@ const GameBody: React.FC<IProps> = ({ cells, width, height }) => {
   );
 };
 
-export default GameBody;
+export default React.memo(GameBody);

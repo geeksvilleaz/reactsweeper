@@ -4,6 +4,7 @@ const initialState: RS.Game = {
   cells: [],
   height: 0,
   numMines: 0,
+  numMinesRemaining: 0,
   timer: 0,
   width: 0,
   isGameOver: false

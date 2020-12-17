@@ -3,6 +3,7 @@ type InitGame = {
   width: number;
   height: number;
   numMines: number;
+  numMinesRemaining: number;
   cells: RS.Cell[];
 }
 

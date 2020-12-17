@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Nav.scss';
 
-interface IProps {}
-
 const Nav: React.FC = () => {
   return (
     <nav className="nav">
