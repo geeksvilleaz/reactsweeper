@@ -5,10 +5,20 @@ type InitGame = {
   numMines: number;
   numMinesRemaining: number;
   cells: RS.Cell[];
+  difficultyLevel: string;
+}
+
+type GameStart = {
+  type: 'game.start';
 }
 
 type GameOver = {
   type: 'game.over';
+  cells: RS.Cell[];
+}
+
+type GameWon = {
+  type: 'game.won';
 }
 
 type CheckCell = {
@@ -17,6 +27,14 @@ type CheckCell = {
   state: string;
 }
 
+type UpdateCells = {
+  type: 'update.cells';
+  cells: RS.Cell[];
+}
+
 export type Action = InitGame 
   | GameOver 
-  | CheckCell;
+  | CheckCell
+  | UpdateCells
+  | GameStart
+  | GameWon;

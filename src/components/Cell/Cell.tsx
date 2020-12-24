@@ -38,6 +38,11 @@ const CELL_STATES: flagStates = {
     state: 'unknown',
     x: -80,
     y: -39
+  },
+  EXPLODED: {
+    state: 'exploded',
+    x: -32,
+    y: -39
   }
 };
 
@@ -47,7 +52,6 @@ const CELL_WIDTH = 16;
 const NUMBER_Y_POSITION = -23;
 
 const Cell: React.FC<IProps> = ({ id, cell }) => {
-  console.log('rendering cell', id);
   const { checkCellCB, setFlagStateCB } = useGame();
 
   const handleRightClick = (event: React.SyntheticEvent) => {
@@ -65,6 +69,7 @@ const Cell: React.FC<IProps> = ({ id, cell }) => {
       case cellConst.states.untouched:
       case cellConst.states.flagged:
       case cellConst.states.unknown:
+      case cellConst.states.exploded:
         return CELL_STATES[cell.state].x;
     }
 
@@ -84,6 +89,7 @@ const Cell: React.FC<IProps> = ({ id, cell }) => {
       case cellConst.states.untouched:
       case cellConst.states.flagged:
       case cellConst.states.unknown:
+      case cellConst.states.exploded:
         return CELL_STATES[cell.state].y;
     }
 
@@ -107,7 +113,7 @@ const Cell: React.FC<IProps> = ({ id, cell }) => {
       onClick={handleClick}
       style={style}
     >
-      {/* {cell.id} */}
+      {/* {cell.id}:{cell.count} */}
     </div>
   );
 };

@@ -1,20 +1,22 @@
 import React from 'react';
 import NumberDisplay from '../NumberDisplay/NumberDisplay';
 import Smiley from '../Smiley/Smiley';
+import Timer from '../Timer/Timer';
 import './GameHead.scss';
 
 interface IProps {
   numMinesRemaining: number;
+  game: RS.Game;
 }
 
-const GameHead: React.FC<IProps> = ({ numMinesRemaining }) => {
+const GameHead: React.FC<IProps> = ({ game, numMinesRemaining }) => {
   return (
     <div className="game-head bevel-down">
       <NumberDisplay display={numMinesRemaining} />
 
-      <Smiley />
+      <Smiley isGameOver={game.isGameOver} difficultyLevel={game.difficultyLevel} isGameWon={game.isGameWon} />
       
-      <NumberDisplay display={999} />
+      <Timer isGameActive={game.isGameActive} />
     </div>
   );
 };

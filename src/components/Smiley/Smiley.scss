@@ -3,4 +3,20 @@
   background-position: 0 -55px;
   width: 26px;
   height: 26px;
+
+  &.up {
+    background-position-x: 0;
+  }
+
+  &.down {
+    background-position-x: -26px;
+  }
+
+  &.exploded {
+    background-position-x: -78px;
+  }
+
+  &.win {
+    background-position-x: -104px;
+  }
 }

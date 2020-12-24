@@ -43,3 +43,6 @@ The classic minesweeper game you know and love, but done with the following tech
 4. Moved cell state logic to the redux store.
 
 ## Day 5
+
+1. Reviewed and cleaned up code.
+2. Started Recursion

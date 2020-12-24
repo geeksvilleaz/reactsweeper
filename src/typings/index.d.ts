@@ -7,6 +7,9 @@ declare module RS {
     timer: number;
     cells: Cell[];
     isGameOver: boolean;
+    isGameActive: boolean;
+    isGameWon: boolean;
+    difficultyLevel: string;
   }
 
   interface Cell {

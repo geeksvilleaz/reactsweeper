@@ -7,7 +7,33 @@ import cellConst from '../constants/cellConst';
 const useGame = () => {
   const dispatch = useDispatch();
   const game = useSelector((state: RS.Store) => state.game);
-  let cellsChecked: any = {};
+
+  function checkWinState(cells: RS.Cell[]): boolean {
+    let numMinesFlagged = 0;
+    let numMines = 0;
+    let numChecked = 0;
+
+    cells.forEach((cell: RS.Cell) => {
+      if (cell.state === cellConst.states.flagged && cell.isMine) {
+        numMinesFlagged++;
+      }
+
+      if (cell.isMine) {
+        numMines++;
+      }
+
+      if (cell.state === cellConst.states.checked) {
+        numChecked++;
+      }
+    });
+
+    console.log({ numMines, numMinesFlagged, numChecked})
+
+    // 1. number of flags === number of mines && flag === isMine
+    // 2. all cells checked
+    return numMines === numMinesFlagged
+      || cells.length - numMines === numChecked;
+  }
 
   const initGameCB = useCallback((difficultyLevel: string) => {
     console.log('init game cb');
@@ -20,9 +46,9 @@ const useGame = () => {
     // caution level
     const cells = cellsArr.map((cell: RS.Cell, i: number) => {
       const isTop = i < level.width;
-      const isRight = i > 0 && i + 1 % level.width === 0;
+      const isRight = i > 0 && (i + 1) % level.width === 0;
       const isBottom = i >= (level.width - 1) * level.height;
-      const isLeft = i > 0 && i % level.width === 0;
+      const isLeft = i % level.width === 0;
 
       const n = i - level.width;
       const ne = i - level.width + 1;
@@ -82,56 +108,113 @@ const useGame = () => {
       numMines: level.numMines,
       numMinesRemaining: level.numMines,
       width: level.width,
-      cells
+      cells,
+      difficultyLevel
     };
 
     dispatch(toDispatch);
   }, [dispatch]);
 
-  const gameOverCB = useCallback(() => {}, []);
+  const gameOverCB = useCallback((cell: RS.Cell) => {
+    const gameOverCells = game.cells.map((gCell: RS.Cell) => {
+      if (gCell.state === cellConst.states.flagged) {
+        return gCell;
+      }
 
-  const checkCellCB = useCallback((cell: RS.Cell) => {
-    cellsChecked[cell.id] = true;
+      return {
+        ...gCell,
+        state: cell.id === gCell.id
+          ? cellConst.states.exploded
+          : cellConst.states.checked
+      };
+    });
 
-    console.log({ cell });
-    // is mine
-    if (cell.isMine) {
-      console.error(' BOOM! ');
-      return;
-    }
+    console.log({gameOverCells})
 
-    // is game over
-    if (game.isGameOver) {
-      return;
-    }
-
-    // if flagged || unknown
-    if (cell.state === cellConst.states.flagged || cell.state === cellConst.states.unknown) {
-      return;
-    }
-
-    // if count > 0
-    // change cell state to 'checked'
     const toDispatch: Action = {
-      type: 'check.cell',
-      cellId: cell.id,
-      state: cellConst.states.checked
+      type: 'game.over',
+      cells: gameOverCells
     };
     dispatch(toDispatch);
+  }, [dispatch, game]);
 
-    // if count is 0
-    if (cell.count === 0) {
-      checkCell(cell);
+  const checkCellCB = useCallback((cell: RS.Cell) => {
+    if (!game.isGameActive && !game.isGameOver) {
+      const toGameActiveDispatch: Action = {
+        type: 'game.start'
+      };
+      dispatch(toGameActiveDispatch);
+    }
+    
+    let localCells = [...game.cells];
+    const isGameOver = checkCellState(cell);
+    const isWinner = checkWinState(localCells);
+
+    checkWinState(localCells);
+
+    if (!isGameOver) {
+      const toDispatch: Action = {
+        type: 'update.cells',
+        cells: localCells
+      };
+      dispatch(toDispatch);
     }
 
-    cellsChecked = {};
+    if (isWinner) {
+      const toDispatch: Action = {
+        type: 'game.won'
+      };
+      dispatch(toDispatch);
+    }
 
-    function checkCell(cell: RS.Cell) {
-      console.log('checking cell id', cell.id);
+    /**
+     * 
+     */
+    function checkCellState(cell: RS.Cell) {
+      if (cell.state === cellConst.states.checked) {
+        return false;
+      }
+
+      // is mine
+      if (cell.isMine) {
+        console.error(' BOOM! ');
+        gameOverCB(cell);
+        return true;
+      }
+
+      // is game over
+      if (game.isGameOver) {
+        return true;
+      }
+
+      // if flagged || unknown
+      if (cell.state === cellConst.states.flagged || cell.state === cellConst.states.unknown) {
+        return false;
+      }
+
+      localCells = localCells.map((localCell: RS.Cell) => {
+        return localCell.id === cell.id
+          ? {
+              ...localCell,
+              state: cellConst.states.checked
+            }
+          : localCell
+      });
+
+      // if count is 0
+      if (cell.count === 0) {
+        checkNearbyCells(cell);
+      }
+    }
+
+    /**
+     * 
+     */
+    function checkNearbyCells(cell: RS.Cell) {
       const isTop = cell.id < game.width;
-      const isRight = cell.id > 0 && cell.id + 1 % game.width === 0;
+      const isRight = cell.id > 0 && (cell.id + 1) % game.width === 0;
       const isBottom = cell.id >= (game.width - 1) * game.height;
-      const isLeft = cell.id > 0 && cell.id % game.width === 0;
+      const isLeft = cell.id % game.width === 0;
   
       const n = cell.id - game.width;
       const ne = cell.id - game.width + 1;
@@ -142,42 +225,39 @@ const useGame = () => {
       const w = cell.id - 1;
       const nw = cell.id - game.width - 1;
   
-      const { cells } = game;
-      if (!isTop && cells[n].count === 0 && cellsChecked[n]) {
-        checkCellCB(cells[n]);
+      if (!isTop) {
+        checkCellState(localCells[n]);
       }
 
-      if (!isTop && !isRight && cells[ne].count === 0 && cellsChecked[ne]) {
-        checkCellCB(cells[ne]);
+      if (!isTop && !isRight) {
+        checkCellState(localCells[ne]);
       }
 
-      if (!isRight && cells[e].count === 0 && cellsChecked[e]) {
-        checkCellCB(cells[e]);
+      if (!isRight) {
+        checkCellState(localCells[e]);
       }
 
-      if (!isRight && !isBottom && cells[se].count === 0 && cellsChecked[se]) {
-        checkCellCB(cells[se]);
+      if (!isRight && !isBottom) {
+        checkCellState(localCells[se]);
       }
 
-      if (!isBottom && cells[s].count === 0 && cellsChecked[s]) {
-        checkCellCB(cells[s]);
+      if (!isBottom) {
+        checkCellState(localCells[s]);
       }
 
-      if (!isBottom && !isLeft && cells[sw].count === 0 && cellsChecked[sw]) {
-        checkCellCB(cells[sw]);
+      if (!isBottom && !isLeft) {
+        checkCellState(localCells[sw]);
       }
 
-      if (!isLeft && cells[w].count === 0 && cellsChecked[w]) {
-        checkCellCB(cells[w]);
+      if (!isLeft) {
+        checkCellState(localCells[w]);
       }
 
-      if (!isLeft && !isTop && cells[nw].count === 0 && cellsChecked[nw]) {
-        checkCellCB(cells[nw]);
+      if (!isLeft && !isTop) {
+        checkCellState(localCells[nw]);
       }
     }
-  }, [dispatch, game, cellsChecked]);
-
-  
+  }, [dispatch, game, gameOverCB]);
 
   const getNumMinesRemainingCB = useCallback((cells: RS.Cell[], numMines: number): number => {
     const numFlags = cells.reduce((prev, curr) => {
@@ -189,9 +269,7 @@ const useGame = () => {
     return numMines - numFlags;
   }, []);
 
-
   const setFlagStateCB = useCallback((cell: RS.Cell) => {
-    console.log({ cell })
     let cellState = cell.state;
 
     const numMinesRemaining = getNumMinesRemainingCB(game.cells, game.numMines);
@@ -213,12 +291,29 @@ const useGame = () => {
         break;
     }
 
+    const localCells = game.cells.map((localCell: RS.Cell) => {
+      if (localCell.id === cell.id) {
+        return {
+          ...localCell,
+          state: cellState
+        }
+      }
+
+      return localCell;
+    });
+    const isWinner = checkWinState(localCells);
+    if (isWinner) {
+      const toWinnnerDispatch: Action = {
+        type: 'game.won'
+      };
+      dispatch(toWinnnerDispatch)
+    }
+
     const toDispatch: Action = {
       type: 'check.cell',
       cellId: cell.id,
       state: cellState
     };
-
     dispatch(toDispatch);
   }, [dispatch, game, getNumMinesRemainingCB]);
 

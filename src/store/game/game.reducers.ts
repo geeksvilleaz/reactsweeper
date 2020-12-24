@@ -7,7 +7,10 @@ const initialState: RS.Game = {
   numMinesRemaining: 0,
   timer: 0,
   width: 0,
-  isGameOver: false
+  isGameOver: false,
+  isGameActive: false,
+  isGameWon: false,
+  difficultyLevel: 'beginner'
 };
 
 function game(state = initialState, action: Action) {
@@ -16,13 +19,33 @@ function game(state = initialState, action: Action) {
       return {
         ...state,
         ...action,
-        isGameOver: false
+        isGameOver: false,
+        isGameActive: false,
+        isGameWon: false,
+        difficultyLevel: action.difficultyLevel
+      };
+    
+    case 'game.start':
+      return {
+        ...state,
+        isGameActive: true
+      };
+
+    case 'game.won':
+      return {
+        ...state,
+        isGameActive: false,
+        isGameOver: true,
+        isGameWon: true
       };
 
     case 'game.over':
       return {
         ...state,
-        isGameOver: true
+        isGameOver: true,
+        isGameActive: false,
+        isGameWon: false,
+        cells: action.cells
       };
 
     case 'check.cell':
@@ -38,6 +61,12 @@ function game(state = initialState, action: Action) {
 
           return cell;
         })
+      };
+
+    case 'update.cells':
+      return {
+        ...state,
+        cells: action.cells
       };
 
     default:
