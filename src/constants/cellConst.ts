@@ -3,7 +3,8 @@ const cellConst = {
     untouched: 'UNTOUCHED',
     flagged: 'FLAGGED',
     unknown: 'UNKNOWN',
-    checked: 'CHECKED'
+    checked: 'CHECKED',
+    exploded: 'EXPLODED'
   }
 };
 

@@ -21,7 +21,12 @@ const Gameboard: React.FC = () => {
 
   return (
     <div className="gameboard bevel-up">
-      <GameHead numMinesRemaining={numMinesRemaining} />
+      <GameHead 
+        isWon={game.isWon} 
+        isGameOver={game.isGameOver} 
+        numMinesRemaining={numMinesRemaining} 
+        isGameActive={game.isGameActive} 
+      />
 
       <GameBody width={game.width} height={game.height} />
     </div>

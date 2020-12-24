@@ -7,8 +7,21 @@ type InitGame = {
   cells: RS.Cell[];
 }
 
+type GameStart = {
+  type: 'game.start';
+};
+
 type GameOver = {
   type: 'game.over';
+  cells: RS.Cell[];
+}
+
+type ResetGame = {
+  type: 'game.reset';
+}
+
+type WinGame = {
+  type: 'win.game';
 }
 
 type CheckCell = {
@@ -17,6 +30,15 @@ type CheckCell = {
   state: string;
 }
 
+type UpdateCells = {
+  type: 'update.cells';
+  cells: RS.Cell[];
+};
+
 export type Action = InitGame 
   | GameOver 
-  | CheckCell;
+  | CheckCell
+  | UpdateCells
+  | GameStart
+  | ResetGame
+  | WinGame;
