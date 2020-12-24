@@ -46,3 +46,12 @@ The classic minesweeper game you know and love, but done with the following tech
 
 1. Reviewed and cleaned up code.
 2. Started Recursion
+
+## Day 6
+
+1. Reviewed Recursion
+2. Completed the resursive calls to check neighboring cells
+3. Created the Timer
+4. Updated the Smiley component to react to state and to reset game
+5. Checked for win conditions
+6. Check for mine explosions.
