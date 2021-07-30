@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/reactsweeper/static/css/main.26fb02a3.chunk.css",
+    "main.js": "/reactsweeper/static/js/main.491659bd.chunk.js",
+    "main.js.map": "/reactsweeper/static/js/main.491659bd.chunk.js.map",
+    "runtime-main.js": "/reactsweeper/static/js/runtime-main.962e5dbd.js",
+    "runtime-main.js.map": "/reactsweeper/static/js/runtime-main.962e5dbd.js.map",
+    "static/js/2.b81df7e8.chunk.js": "/reactsweeper/static/js/2.b81df7e8.chunk.js",
+    "static/js/2.b81df7e8.chunk.js.map": "/reactsweeper/static/js/2.b81df7e8.chunk.js.map",
+    "index.html": "/reactsweeper/index.html",
+    "static/css/main.26fb02a3.chunk.css.map": "/reactsweeper/static/css/main.26fb02a3.chunk.css.map",
+    "static/js/2.b81df7e8.chunk.js.LICENSE.txt": "/reactsweeper/static/js/2.b81df7e8.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.962e5dbd.js",
+    "static/js/2.b81df7e8.chunk.js",
+    "static/css/main.26fb02a3.chunk.css",
+    "static/js/main.491659bd.chunk.js"
+  ]
+}
